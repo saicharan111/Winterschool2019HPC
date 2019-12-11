@@ -1,0 +1,56 @@
+Advanced MPI:
+------------
+Process have distinct address spaces. Each vaiable has their own set of variables
+
+Hydra process manager : launch node in main node and proxy in all other hosts
+
+we have send queue and recv queue are there at hosts level.
+
+Eager vs Randover protocol :
+
+send completes wiothout acknowledgement from destination
+
+https://docs.oracle.com/cd/E19061-01/hpc.cluster30/805-7230-10/z4000b4b1004811/index.html
+
+
+Network topology plays a key role in MPI performance
+
+Pair wise distances between the nodes differ then - This effect the performance of MPI.
+
+Collective Communications :
+---------------------------
+
+MPI_BCAST : for boradcasting 
+
+Root process sends message to all process
+
+Binomial Tree : https://book.huihoo.com/data-structures-and-algorithms-with-object-oriented-design-patterns-in-c++/html/page371.html
+
+
+MPI_GATHER : to gather values from all processes to a root process
+
+MPI_SCATTER : scatter values from all processes to root processes ( instead of n we will send only n/4 elements to the processes)
+
+MPI_GATHERV : Vector variant of gather ( different lenghts from different processes)
+
+Note : All these calls aer blocking calls
+
+
+Scalability :
+-------------
+
+strong scaling : problem size if fixed and increase number of processes
+
+weak scaling : fixed problem size per process and increase number of processes
+------------------------------------------------------------------------------------------------------
+
+
+Hands on : OPENMP+ MPI 
+---------- 
+
+
+
+
+
+
+

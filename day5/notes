@@ -1,0 +1,112 @@
+10/12/19: PART3: GPU
+-----------------------
+Loop Optimization with OpenACC :
+
+
+how to control gangs and vectors and workers ?
+
+making all workers to work is different from making all workers to do works in origanised fashion
+
+Group of workers form a gangs and coordinate with each other.
+
+one gang is different from another gang
+
+clause - collapse(N) :
+-----------------------
+it will collapse 2 loops into one.
+
+By collapsing we can increase parallelism
+
+example:
+#pragma acc parallel loop collapse(2)
+
+it will make 2 dim array into 1-dim array and itterate over it
+
+clause - tile(x,y,z):
+---------------------
+
+it will help for data locality.
+
+will be able to execute multiple "tiles" simultaneously
+
+it can increase data locality in some codes
+
+ex :
+#pragma acc kernel loop tile(2,2)
+
+
+clause - private(variable) & firstprivate(variable):
+---------------------------
+
+ex : #pragma acc kernels loop private(tmp[0:3])
+
+some temperory variable need to be private for thread. Becuase its for local useage for that thread
+
+firstprivate will intialize value to host value in GPU
+
+GANG,WORKER, VECTOR CLAUSES:
+----------------------------
+
+#pragma acc parallel gang
+
+SEQ Clause :
+--------------
+
+when there is dependency we need to use SEQ clause
+
+example:
+#pragma acc loop SEQ
+
+*note add vector length and number of angs
+
+#pragma acc parallel vector_length(1024)
+
+#pragma acc parallel num_gangs(2)
+
+
+basically we should play with vectors not with gangs;
+
+References :  https://www.openacc.org/sites/default/files/inline-files/OpenACC%20API%202.6%20Reference%20Guide.pdf
+
+
+--------------------------------------------------------------------------------------------------------------------------
+
+CUDA C/C++ :
+----------
+There are 2 kinds of architecture : Host(CPU), Device(GPU)
+
+we use nvcc (NVIDA-C) compiler for this
+
+we have .cu is the extension of the files for CUDA c programs
+
+__global__void mykernel(){
+
+}
+
+int main()
+{
+
+    mykernel<<<1,1>>>();
+    printf("HELLO");
+    return 0;
+
+
+}
+
+
+__global__ : nvcc extracts code form nornal code and create GPU binaries for the this code.
+
+nvcc will not do anything to your CPU compiler.
+
+mykernel<<<1,1>>>(); - is the call to the kernel
+
+add<<<N,1>>>(); - 'N' here is number of GANS in OpenACC
+
+In real time we have not 1 level of parallelism but we have 2 level of parallelism i.e m-blocks each having n-threads each
+
+
+
+
+
+
+

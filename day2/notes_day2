@@ -1,0 +1,205 @@
+7/12/19 : Advanced OpenMP
+--------------------------
+
+nested parallelism : one thread can able to spon more threads
+omp_set_nested(1)
+
+cyclic distribution is useful when you are using load balencing 
+
+when data dependency is there, there is problem with nowait constraints
+
+Explicit Tasks :
+----------------
+
+Not all programs have simple loops can be parallelized
+
+conside a program for itterating linked list. In this case thread kind of thing we cant use #pragma omp parallel 
+
+Tasks are independent logical units of work.
+
+ex : fabonaci(n) one Thread will do and Fabonaci(n-1) another thread will do.
+
+we can add those taks in work queue. each worker thread will perform indivdual tasks and come back.
+
+#Intel TBB is one of example for task based one
+
+Task can be nested as well : A task may itself generate tasks
+
+ex :
+
+#pragma omp master
+{
+
+    #pragma imp task
+    fred();
+    #pragma imp task
+    second();
+
+    #pragma imp barrier
+}
+
+
+
+we can also use(same as barrier) : #pragma imp taskwait
+
+Note :
+#pragma omp single  means any thread can execute
+
+
+preorder , inroder and post order can be easlity done with tasks (in parallel program)
+
+
+scheduling tasks :
+------------------
+
+Tasks are tied to thread that first executes them.
+
+In better load balencing puropse we use thread untied clause. 
+
+like thread 2 assigned to task 233. if task 233 is rescheduled then  any other threads can able to finish task.
+
+taskyield directive :
+--------------------
+
+specifies that current task can be suspended in favour of executing other tasks.
+
+#pragma omp taskyield
+
+
+Other clauses : priority, final etc.
+
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+SIMD Programming: single instruction multiple data.
+-----------------
+
+Instruction level parallelism : piplelining
+
+Vector Level parallelism : SIMD vector processing instruction units
+
+Thread level parallelism : HyperThreading
+
+vaddsd - double precision in serial
+
+vaddpd - double precision in parallel
+
+for this vectorization we need fat registers
+
+multi threading + vectorization will boost performance a lot.
+
+intel SSE are providing fatter 128 bit registers : they are other from registers named xmm0, ymm0,zmm0 etc
+
+example :
+
+ vadds xmm0,xmm1,xmm2
+
+note : use SMID vector capable kernal libararies.
+
+vectorization fails: data dependencies etc
+
+so we can give some hints to compilers so that it will help auto vectorization.
+
+in older versions:
+
+#pragma vetor always
+
+#pragma ivdep
+
+latest  ones suport for OpenMP
+
+#pragma omp simd  - go ahead and vectorize loop
+
+#pragms omp declare simd - compiler will generate different for both scalar and vector type.
+
+#pragma omp for smid - subdivide the work again(parallelize and vectorize loop nest)
+
+
+
+OpenMP Memory Model :
+----------------------
+
+Busy-Wait Paradigm: race condition problem
+
+LICM : loop invatient code motion - optimization done by compiler ( variable reordering etc)
+
+they can do : store-store, load-load, Lode-store, Store-Load reordering.
+
+Read About the FENCES.
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+Afternoon Session : MPI (MESSAGE PASSING INTERFACE) : its a process based parallelism
+--------------------
+
+shared Memory can be run in only one machine. But in MPI we can do jobs in multiple machines
+
+writing parallel programs in industry(favourite) : super computers are benchmarked using MPI Programming
+
+communication is one of major part of MPI; eventhough its overhead its necessary in MPI Model
+
+input is easily parallelizable in MPI; But parallelizing output is bit tricky and we need to take care 
+
+Each process has own address spaces. and data share between two processes in a cooperative manner.
+
+MPI allows more control over data then shared memory Model.
+
+There are 6 basic MPI calls. If we know all 6 basic fucntions then most of the work is done.
+
+
+Each process has its own ID called as "RANK" ; it heps in communication between two process.
+
+source <------communicator----->destination
+
+By default is MPI_COMM_WORLD
+
+user can create sub sets of default communicators as well.
+
+Building Blocks of MPI :
+------------------------
+
+send(void *sendbuf, int noelemets, int dest)
+
+receive(void *recbuf,int noelemets, int source)
+
+
+There is blocking and non blocking modes of operations in this MPI 
+
+mpi.h and mpif.h are the basic header files for MPI in c and fortan respectively
+
+1) MPI_INIT - Initialize MPI environment
+
+2) MPI_FINALIZE 
+
+3) MPI_COMM_RANK
+
+4) MPI_COMM_SIZE
+
+5) MPI_Send
+
+6) MPI_Recv
+
+MPI has its won data types like MPI_INT, MPI_CHAR etc..
+
+ex: MPI_Send(data,500,MPI_FLOAT,5,25,MPI_COMM_WORLD)
+
+
+In send there are diff kinds of sends like : standrad send, synchrnous send, buffered send, ready send etc
+
+
+how to run:
+------------
+mpicc sample.c
+mpiexec -n 4 ./a.out
+
+
+
+
+
+
+
+
+
+

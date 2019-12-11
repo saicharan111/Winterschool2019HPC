@@ -1,0 +1,91 @@
+awshpc2019
+5tz2NN$th
+
+cluster login: awshpc@123
+----------------------------------------------------------------------------------------------
+6/12/19 -- OpenMP(open Multi processing)- fore share memory parallelism
+
+Multi core may not always gives the best performance, it has its own problems.
+
+shared memory model : multiple cores share same memory space 
+
+it provides multi threaded parallelism
+
+directives: requests to the compiler
+
+using this it's easy to crete programs in c,c++, and fortan
+
+supports fine and coarse grained prarallelis
+
+openMP start as single thread. then create additional threads which will do the paralization of some regions and synchronizes (fork and join model)
+
+example code :
+---------------
+#include "omp.h"
+
+#pragma omp parallel
+{
+
+
+    // parallel region
+}
+
+sequential code here
+
+
+Thread communication is implicit. 
+
+we need to have Synchronised mechanism to have the parallel code race conditions
+
+#pragma omp parallel[clause]
+
+This clause will be helpful to specify particular constraints
+
+if clase :
+----------
+
+#pragma omp parallel if(flag!=0)
+{
+
+    // some code
+}
+
+Refer : https://www.openmp.org/wp-content/uploads/OpenMP-4.5-1115-CPP-web.pdf
+
+for loop :
+------------
+#pragma omp parallel for
+for(i=0;i<10;i++)
+{
+
+    // code
+}
+
+Race Conditions : In order to avoid race conditions we use critical part
+----------------
+#pragma omp critical
+{
+
+    // single thread can acces ths portion    
+}
+
+it reduces prarallel performance 
+
+
+Barrier directives : One Thread will wait for all threads (sync here) then pass the gate
+
+#pragma omp barrier
+
+
+-------------------------
+handson : intel can able to internal priviatization
+
+but gcc can't do that it will go on executing for a long time
+
+if there is enough parallelism on outer loop. adding innter parallelism will be overhead
+
+ex : data locality index( More misses happend - cache miss)
+
+
+
+

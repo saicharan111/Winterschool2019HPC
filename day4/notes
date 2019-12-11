@@ -1,0 +1,241 @@
+9/12/19 : Job Scheduling
+--------------------------
+
+Job is not just a program(executable). Job script contains specs related to computing resources,environment variables
+
+Job size : number of nodes(resources)
+
+Job time : Amount of time to run 
+
+Interactive mode: As we are using personal computers; Many HPC systems don't have HPC access
+
+Batch Mode : refers to program execution in background ; They will provide exclusive access to the system;
+
+workload manger will take care of what user has requested;
+
+Resouces maager will give data about all info related to system; like memory available and cores available.
+
+when job submited by user; Reource manager will see this job can be performed with available reources. if available then job is going to be run.
+
+execution manager will be there in individual machines; which actually executes job.
+
+Batch scheduling : FCFS
+
+Back Filling : shceduler bas intelligence to lower queue on resources that are curretly idle.
+
+Faire Share : Fair method for ordering based on usage history.
+
+Preemptive : take out job from one core and schedule high priority jobs.
+
+SLURM : sample job script; Its like a shell script.( Most used open source software in many super computers)
+
+similar software : Torque, LSF, Load Levever, condor.
+
+
+-----------------------------------------------
+
+GPU BootCamp : GPU programming
+-------------------------------
+
+paralallel programming is part of performacnce enginnering ; Task level Processing, data level parallelism(graphics in computers)
+
+SIMD : GPU are very good in this
+
+single core(mega flops)---> multi core(giga flops) ---> difference memory CPU + infinity band network(MPI programming) : Tera Flops ----> Rise of GPU()
+
+ARM Architecture : power efficient used mobiles and in super computers as well.
+
+CUDA Platform:  computer unified 
+-----------------
+
+software stack+GPU
+
+same architecure for embeded devides + laptops + SUPER COMPUTERS (NVIDIA MADE)
+
+80-20 principle : 80% of bugs in 20% of code : mostly in for loops
+
+for loops in GPU and remaining sequential in CPU - hetrogenious computing
+
+***Note(Read About that) : GPU Direct technology
+
+CPU optimized for serial tasks; High frequency + high memory + large cache
+
+GPU : High memory bandwidth(900 gb/s)+Latency hiding architechure+ inverted architechure compared to CPU + Need to launch many number of Threads ; GPU core run at less frequency(3-4 slower than CPU)
+
+
+if we are uinsg less threads then GPU is not good architechure.
+
+
+CPU + GPU will give the best performacnce: sequential on CPU + Parllel in GPU
+
+How to start with GPU :
+-----------------------
+Applications : All AI worlds are GPU acdelerated
+
+ex : CUDNN; TensorRT; Deep stream SDK
+
+
+OPENACC : like openMp for GPU's + hetrogenious architecure
+
+1)#pragma acc kernels 
+2) cuLABS Library
+3) own CUDA "c" code
+4) numba for python
+
+NGC for efficiency : Nvidia GPU cloud
+--------------------
+
+Containers (dockers) : for high performance computing
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+AFTERNOON SESSION : OPENACC : open standrad for open accelator
+
+OPENACC will comes under compiler directives; easy to use and performance portable;
+
+3 pramga :
+
+1) #pragma acc parallel
+
+note : developer assicaited parallelism
+
+2) manage data movement
+
+3) Data locality 
+
+
+-->single source for different hardware architectures ; Low learning curve; Very easy to learn
+
+syntax : (OPENACC)
+------------------
+
+#pragma acc directive clauses
+
+Basic mantra : analyze -----> parallelize----> optimized
+
+we need find the functions which takes most of time.
+
+
+PGAPROFILER (PGPPROF): will tell us that which one of the functions are taking CPU times in serial programming
+
+
+#pragma acc parallel -  It creates gangs; each Gang might have or or more threads
+
+
+#pragma acc loop - split this loop across the gangs
+
+*note : we can write #pragma acc parallel loop ( optmized way)
+
+
+Reduction : because shared variables across the threads
+
+
+we are using pgcc, pgc++ and pgfortan, pgi 
+
+-fast flag to get the optimized values 
+
+Minfo - please tell me what did you do with that pragma : flag will help us to understand 
+
+Minfo=accel : gives us accelarated things
+
+-ta flag :
+
+enables building openACC coe for Target Architecture
+
+
+-ta=mukticore
+
+-ta=tesla:managed for nvida graphic compared
+
+----------------------------------------------
+
+DataManagement :
+
+data transfer between CPU and GPU
+
+CPU and GPU connected between I/O bugs
+
+CUDA Unified Memory : CPU and GPU has one uified Memory
+
+Driveres will take care of transfering data; Page migration engine will take care of all these data transfer
+
+-ta:managed - if we remove and then it become compiler based
+
+we can copy them in advanced which willimprove performance
+
+if we remove :managed then compiler doesn't know data we need to transfer
+
+Data Shaping :
+
+--------------
+
+copy(list) : to GPU and copied back to CPU
+
+copyin(list) : into GPU and never take back
+
+copyout(list) : out of GPU; 
+
+
+syntax : copy(array[starIndex:length])
+
+
+we can do copy partial array as well
+
+
+But it will give the slower output; see profiler and unerstand 
+
+
+data clauses :
+
+#pragma acc data copyin(a[0:n],b[0:N]) copyout(c[0:n])
+{
+    #pragma acc parallel loop
+    for()
+    {
+        // code
+    }
+
+
+}
+
+
+-----------------------------------------------------------------------
+Data update:
+
+#pragma acc update device(A[0:N]) : cpu to device
+
+#pragma acc update self() : device to GPU
+
+
+-------------------------------------------------------------------------
+
+
+Unstructured Data directives
+-----------------------------
+#pragma acc enter data copyin() - inside constructors
+
+
+#pragma acc exit data delete() - destructoes
+
+
+---------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
